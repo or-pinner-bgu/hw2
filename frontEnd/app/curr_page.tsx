@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Note from './note'
 interface PageProps {
   currentPage: number;
 }
@@ -21,13 +22,21 @@ interface Note {
     content: string;
 }
 
-const Notes: React.FC<PageProps>  = ({currentPage}) => {
+const Curr_page: React.FC<PageProps>  = ({currentPage}) => {
     const [notes, setNotes] = useState<Note[]>([]);
 
     useEffect(() => {
-        const start_index = (currentPage-1)*NOTES_PER_PAGE
-        const end_index = (currentPage)*NOTES_PER_PAGE
+        fetchNotes();
+    }, [currentPage]);
+
+    const handleNoteUpdate = () => {
+        fetchNotes(); // Refresh notes after editing or deleting
+    };
+
+    
         const fetchNotes = async () => {
+            const start_index = (currentPage-1)*NOTES_PER_PAGE
+            const end_index = (currentPage)*NOTES_PER_PAGE
             try {
                 const response = await axios.get(`${API_URL}?_start=${start_index}&_end=${end_index}}`);
                 setNotes(response.data);
@@ -35,21 +44,13 @@ const Notes: React.FC<PageProps>  = ({currentPage}) => {
                 console.error('Error fetching notes:', error);
             }
         };
-        fetchNotes();
-    }, [currentPage]);
 
     return (
         <div className="allNotes">
             <h1>Notes</h1>
             <div>
                 {notes.map(note => (
-                    <div key={note.id} className="note" id={`${note.id}`}>
-                        <h2>{note.title}</h2>
-                        <small>Posted by: {note.author.name}</small>
-                        <small>mail: {note.author.email}</small>
-                        <br />
-                        {note.content}
-                    </div>
+                     <Note key={note.id} note={note} onUpdate={handleNoteUpdate} />
                 ))}
             </div>
            
@@ -57,4 +58,4 @@ const Notes: React.FC<PageProps>  = ({currentPage}) => {
     );
 };
 
-export default Notes;
+export default Curr_page;

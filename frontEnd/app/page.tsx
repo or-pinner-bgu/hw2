@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Pagination from './pagination';
-import Posts from './curr_page';
+import Notes from './curr_page';
 import './styles.css';
 
-const POSTS_PER_PAGE = 10;
+const NOTES_PER_PAGE = 10;
 const API_URL = 'http://localhost:3001/notes';
 
 const App = () => {
@@ -16,9 +16,9 @@ const App = () => {
     useEffect(() => {
         const fetchTotalCount = async () => {
             try {
-                const response = await axios.get(`${API_URL}?_limit=${POSTS_PER_PAGE}`);
+                const response = await axios.get(`${API_URL}?_limit=${NOTES_PER_PAGE}`);
                 const totalCount = response.headers["x-total-count"];
-                setTotalPages(Math.ceil(parseInt(totalCount)/POSTS_PER_PAGE));
+                setTotalPages(Math.ceil(parseInt(totalCount)/NOTES_PER_PAGE));
             } catch (error) {
                 console.error('Error fetching total count:', error);
             }
@@ -33,7 +33,7 @@ const App = () => {
 
     return (
         <div>
-            <Posts currentPage={currentPage} />
+            <Notes currentPage={currentPage} />
             <Pagination
                 currentPage={currentPage}
                 totalPages={numOfPages}
@@ -44,4 +44,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default App;

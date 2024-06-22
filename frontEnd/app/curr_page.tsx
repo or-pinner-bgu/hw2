@@ -6,7 +6,7 @@ interface PageProps {
   currentPage: number;
 }
 
-const POSTS_PER_PAGE = 10;
+const NOTES_PER_PAGE = 10;
 const API_URL = 'http://localhost:3001/notes';
 
 interface Author {
@@ -14,41 +14,41 @@ interface Author {
     email: string;
 }
 
-interface Post {
+interface Note {
     id: number;
     title: string;
     author: Author;
     content: string;
 }
 
-const Posts: React.FC<PageProps>  = ({currentPage}) => {
-    const [posts, setPosts] = useState<Post[]>([]);
+const Notes: React.FC<PageProps>  = ({currentPage}) => {
+    const [notes, setNotes] = useState<Note[]>([]);
 
     useEffect(() => {
-        const start_index = (currentPage-1)*POSTS_PER_PAGE
-        const end_index = (currentPage)*POSTS_PER_PAGE
-        const fetchPosts = async () => {
+        const start_index = (currentPage-1)*NOTES_PER_PAGE
+        const end_index = (currentPage)*NOTES_PER_PAGE
+        const fetchNotes = async () => {
             try {
                 const response = await axios.get(`${API_URL}?_start=${start_index}&_end=${end_index}}`);
-                setPosts(response.data);
+                setNotes(response.data);
             } catch (error) {
-                console.error('Error fetching posts:', error);
+                console.error('Error fetching notes:', error);
             }
         };
-        fetchPosts();
+        fetchNotes();
     }, [currentPage]);
 
     return (
-        <div className="allPosts">
-            <h1>Posts</h1>
+        <div className="allNotes">
+            <h1>Notes</h1>
             <div>
-                {posts.map(post => (
-                    <div key={post.id} className="post" id={`${post.id}`}>
-                        <h2>{post.title}</h2>
-                        <small>Posted by: {post.author.name}</small>
-                        <small>mail: {post.author.email}</small>
+                {notes.map(note => (
+                    <div key={note.id} className="note" id={`${note.id}`}>
+                        <h2>{note.title}</h2>
+                        <small>Posted by: {note.author.name}</small>
+                        <small>mail: {note.author.email}</small>
                         <br />
-                        {post.content}
+                        {note.content}
                     </div>
                 ))}
             </div>
@@ -57,4 +57,4 @@ const Posts: React.FC<PageProps>  = ({currentPage}) => {
     );
 };
 
-export default Posts;
+export default Notes;

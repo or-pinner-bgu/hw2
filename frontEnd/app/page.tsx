@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Pagination from './pagination';
-import curr_page from './curr_page';
+import CurrPage from './curr_page';
 import './styles.css';
 
 const NOTES_PER_PAGE = 10;
@@ -33,7 +33,7 @@ const App = () => {
 
     return (
         <div>
-            <Curr_page currentPage={currentPage} />
+            <CurrPage currentPage={currentPage} />
             <Pagination
                 currentPage={currentPage}
                 totalPages={numOfPages}
@@ -44,4 +44,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default App;

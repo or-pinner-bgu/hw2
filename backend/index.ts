@@ -1,34 +1,77 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import 'dotenv/config';
-import morgan from 'morgan';
-import logger from './middleware/logger.js';
-import notesRouter from './routes/notes.js';
 
-const MONGODB_URI = process.env.MONGODB_CONNECTION_URL;
+const MONGODB_URL = process.env.MONGODB_CONNECTION_URL || '';
 const app = express();
 const PORT = 3001;
 
-// Middleware
 app.use(express.json());
-app.use(morgan('combined'));
-app.use(logger);
 
-// Routes
-app.use('/notes', notesRouter);
+mongoose.connect(MONGODB_URL)
 
-// Connect to MongoDB
-mongoose.connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true
-})
 .then(() => {
     console.log('Connected to MongoDB');
-    // Start server
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
     });
 })
 .catch((err) => console.error('Error connecting to MongoDB:', err));
+
+const noteSchema = new mongoose.Schema({
+    id: Number,
+    title: String,
+    author : {
+        name: String,
+        email: String
+    },
+    content: String
+});
+
+const Note = mongoose.model('Note', noteSchema);
+
+app.get('/notes', async (req, res) => {
+    const start_index = req.query._start || 0;
+    const end_index = req.query._end || 10;
+    try {
+        const notes = await Note.find().skip(start_index).limit(end_index);
+        res.json(notes);
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching notes' });
+    }
+});
+
+app.post('/notes', async (req, res) => {
+    const note = new Note({
+        id: req.body.id,
+        title: req.body.title,
+        author: req.body.author,
+        content: req.body.content
+    });
+    
+    note.save().then(() => {
+        res.json(note);
+    })
+});
+
+app.put('/notes/:id', async (req, res) => {
+    const note = {
+        id: req.body.id,
+        title: req.body.title,
+        author: req.body.author,
+        content: req.body.content
+    };
+
+    Note.findByIdAndUpdate(req.params.id, note, { new: true })
+        .then((updatedNote) => {
+            res.json(updatedNote);
+        })
+});
+
+app.delete('/notes/:id', async (req, res) => {
+    await Note.findByIdAndDelete(req.params.id)
+        .then(() => {
+            res.json({ message: 'Note deleted' });
+        })
+});
+

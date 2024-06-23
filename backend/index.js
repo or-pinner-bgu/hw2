@@ -84,24 +84,34 @@ app.post('/notes', async (req, res) => {
 });
 
 app.put('/notes/:id', async (req, res) => {
-    const note = {
+    const noteData = {
         id: req.body.id,
         title: req.body.title,
         author: req.body.author,
         content: req.body.content
     };
 
-    Note.findByIdAndUpdate(req.params.id, note, { new: true })
-        .then((updatedNote) => {
-            res.json(updatedNote);
-        })
+    try {
+        const updatedNote = await Note.findOneAndUpdate({ id: req.body.id }, noteData, { new: true });
+        if (!updatedNote) {
+            return res.status(404).json({ message: 'Note not found' });
+        }
+        res.json(updatedNote);
+    } catch (error) {
+        res.status(500).json({ error: 'Error updating note' });
+    }
 });
 
 app.delete('/notes/:id', async (req, res) => {
-    await Note.deleteMany({id: req.params.id})
-        .then(() => {
-            res.json({ message: 'Note deleted' });
-        })
+    try {
+        const result = await Note.deleteMany({ id: req.params.id });
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: 'Note not found' });
+        }
+        res.json({ message: 'Note deleted' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error deleting note' });
+    }
 });
 
 app.get('/notesCount', async (req, res) => {

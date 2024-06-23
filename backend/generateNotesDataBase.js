@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const url = "mongodb+srv://orpinner32:JX1nKKWMyFq1mLg2@hw2.hu3jcjt.mongodb.net/notesApp?retryWrites=true&w=majority&appName=hw2";
 

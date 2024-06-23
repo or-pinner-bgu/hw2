@@ -8,6 +8,7 @@ import { ThemeContext } from './Theme';
 
 interface PageProps {
   currentPage: number;
+  notesNumber: number;
   handleDelete: () => void;
   addNoteCount: () => void;
 }
@@ -27,7 +28,7 @@ interface Note {
     content: string;
 }
 
-const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCount}) => {
+const Curr_page: React.FC<PageProps>  = ({currentPage, notesNumber, handleDelete, addNoteCount}) => {
     const [notes, setNotes] = useState<Note[]>([]);
     const theme = useContext(ThemeContext); 
 

@@ -40,7 +40,8 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
         ];
 
     };
-
+    console.log('Current page:', currentPage);
+    console.log('Total pages:', totalPages);
     const pageNumbers = getPageNumbers();
 
     return (

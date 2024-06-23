@@ -1,15 +1,27 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-
+import fs from 'fs';
 import 'dotenv/config';
 
-const MONGODB_URL = process.env.MONGODB_CONNECTION_URL || '';
+const MONGODB_URL = process.env.MONGODB_CONNECTION_URL;
 const app = express();
 const PORT = 3001;
 
+
 app.use(express.json());
 app.use(cors());
+//Middleware to log requests 
+app.use((req, res, next) => {
+    const logData = `${new Date().toISOString()} | ${req.method} | ${req.url} | ${JSON.stringify(req.body)}\n`;
+    fs.appendFile('log.txt', logData, (err) => {
+        if (err) {
+            console.error('Error writing to log file:', err);
+        }
+    });
+    next();
+});
+
 
 mongoose.connect(MONGODB_URL)
 
@@ -33,14 +45,28 @@ const noteSchema = new mongoose.Schema({
 
 const Note = mongoose.model('Note', noteSchema);
 
+const NOTES_PER_PAGE = 10;
+
 app.get('/notes', async (req, res) => {
     const start_index = parseInt(req.query._start) || 0;
-    const limit = parseInt(req.query._end) || 10;
+    const limit = NOTES_PER_PAGE;
     try {
         const notes = await Note.find().skip(start_index).limit(limit);
         res.json(notes);
     } catch (error) {
         res.status(500).json({ error: 'Error fetching notes' });
+    }
+});
+
+app.get('/notes/:id', async (req, res) => {
+    try {
+        const note = await Note.findOne({ id: req.params.id });
+        if (!note) {
+            return res.status(404).json({ error: 'Note not found' });
+        }
+        res.json(note);
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching note' });
     }
 });
 
@@ -72,7 +98,7 @@ app.put('/notes/:id', async (req, res) => {
 });
 
 app.delete('/notes/:id', async (req, res) => {
-    await Note.findByIdAndDelete(req.params.id)
+    await Note.deleteMany({id: req.params.id})
         .then(() => {
             res.json({ message: 'Note deleted' });
         })

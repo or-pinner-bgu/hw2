@@ -9,7 +9,7 @@ interface AddNoteProps {
     onAdd: () => void; 
 }
 
-const AddNote: React.FC<AddNoteProps> = ({ onAdd }) => {
+const AddNote: React.FC<AddNoteProps> = ({ onAdd}) => {
     const [title, setTitle] = useState('');
     const [authorName, setAuthorName] = useState('');
     const [authorEmail, setAuthorEmail] = useState('');

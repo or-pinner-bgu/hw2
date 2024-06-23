@@ -8,7 +8,7 @@ import './styles.css';
 import { ThemeContext } from './Theme';
 
 const NOTES_PER_PAGE = 10;
-const API_URL = 'http://localhost:3001/notes';
+const API_URL_notesCount = 'http://localhost:3001/notesCount';
 
 const App = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -20,8 +20,8 @@ const App = () => {
 
     const fetchTotalCount = async () => {
         try {
-            const response = await axios.get(`${API_URL}?_limit=${NOTES_PER_PAGE}`);
-            const totalCount = response.headers["x-total-count"];
+            const response = await axios.get(API_URL_notesCount);
+            const totalCount = response.data;
             setTotalPages(Math.ceil(parseInt(totalCount)/NOTES_PER_PAGE));
             setTotalNotesCount(totalCount);
         } catch (error) {

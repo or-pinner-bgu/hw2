@@ -476,42 +476,6 @@
         "email": "mail_63@gmail.com"
       },
       "content": "Content for note 63"
-    },
-    {
-      "id": 64,
-      "title": "Note 64",
-      "author": {
-        "name": "Author 64",
-        "email": "mail_64@gmail.com"
-      },
-      "content": "Content for note 64"
-    },
-    {
-      "id": 65,
-      "title": "Note 65",
-      "author": {
-        "name": "Author 65",
-        "email": "mail_65@gmail.com"
-      },
-      "content": "Content for note 65"
-    },
-    {
-      "id": 66,
-      "title": "Note 66",
-      "author": {
-        "name": "Author 66",
-        "email": "mail_66@gmail.com"
-      },
-      "content": "Content for note 66"
-    },
-    {
-      "title": "asdf",
-      "author": {
-        "name": "asdf",
-        "email": "pinnero@post.bgu.ac.il"
-      },
-      "content": "asdf",
-      "id": 67
     }
   ]
 }

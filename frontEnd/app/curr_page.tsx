@@ -1,10 +1,15 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import Note from './note'
+import Note from './note';
+import AddNote from './AddNote';
+import { ThemeContext } from './Theme';
+
 interface PageProps {
   currentPage: number;
+  handleDelete: () => void;
+  addNoteCount: () => void;
 }
 
 const NOTES_PER_PAGE = 10;
@@ -22,8 +27,9 @@ interface Note {
     content: string;
 }
 
-const Curr_page: React.FC<PageProps>  = ({currentPage}) => {
+const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCount}) => {
     const [notes, setNotes] = useState<Note[]>([]);
+    const theme = useContext(ThemeContext); 
 
     useEffect(() => {
         fetchNotes();
@@ -45,15 +51,25 @@ const Curr_page: React.FC<PageProps>  = ({currentPage}) => {
             }
         };
 
+        const handleAddNote = () => {
+            addNoteCount();
+            fetchNotes();
+        }
+
+        const handleDeleteNote = () => {
+            handleDelete();
+            fetchNotes();
+        }
+
     return (
-        <div className="allNotes">
+        <div className={`allNotes ${theme}`}>
             <h1>Notes</h1>
             <div>
                 {notes.map(note => (
-                     <Note key={note.id} note={note} onUpdate={handleNoteUpdate} />
+                     <Note key={note.id} note={note} onUpdate={handleNoteUpdate} onDelete = {handleDeleteNote} />
                 ))}
             </div>
-           
+            <AddNote onAdd = {handleAddNote}/>
         </div>
     );
 };

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
+import { ThemeContext } from './Theme';
 
 interface NoteProps {
     note: {
@@ -14,11 +15,13 @@ interface NoteProps {
         content: string;
     };
     onUpdate: () => void; 
+    onDelete: () => void;
 }
 
-const Note: React.FC<NoteProps> = ({ note, onUpdate }) => {
+const Note: React.FC<NoteProps> = ({ note, onUpdate, onDelete}) => {
     const [editing, setEditing] = useState(false);
     const [editedContent, setEditedContent] = useState(note.content);
+    const theme  = useContext(ThemeContext);
 
     const handleEdit = () => {
         setEditing(true);
@@ -42,7 +45,8 @@ const Note: React.FC<NoteProps> = ({ note, onUpdate }) => {
     const handleDelete = async () => {
         try {
             await axios.delete(`http://localhost:3001/notes/${note.id}`);
-            onUpdate(); // Refresh notes after deletion
+            onDelete(); 
+            // onUpdate(); // Refresh notes after deletion
         } catch (error) {
             console.error('Error deleting note:', error);
         }
@@ -53,7 +57,7 @@ const Note: React.FC<NoteProps> = ({ note, onUpdate }) => {
     };
 
     return (
-        <div className="note" id={`${note.id}`}>
+        <div className={`note ${theme}`} id={`${note.id}`}>
             <h2>{note.title}</h2>
             <small>Posted by: {note.author.name}</small>
             <small>Email: {note.author.email}</small>

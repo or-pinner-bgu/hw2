@@ -9,6 +9,18 @@ body {
     color: #333;
 }
 
+
+
+body.light, .note.light {
+    background-color: white;
+    color: black;
+}
+
+body.dark, .allNotes.dark, .note.dark {
+    background-color: black;
+    color: white;
+}
+
 .allNotes h1 {
     font-size: 50px;
     margin-left: 1%;

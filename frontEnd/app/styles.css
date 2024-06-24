@@ -16,7 +16,7 @@ body.light, .note.light {
     color: black;
 }
 
-body.dark, .allNotes.dark, .note.dark, .pagination.dark, .mainPage.dark {
+body.dark, .allNotes.dark, .note.dark, .pagination.dark, .mainPage.dark, .showAddNote.dark{
     background-color: black;
     color: white;
 }
@@ -24,7 +24,7 @@ body.dark, .allNotes.dark, .note.dark, .pagination.dark, .mainPage.dark {
 .allNotes h1 {
     font-size: 50px;
     margin-left: 1%;
-    color: #003000;
+    color: #006000;
 }
 
 /* Container for the notes and pagination */
@@ -48,6 +48,15 @@ body.dark, .allNotes.dark, .note.dark, .pagination.dark, .mainPage.dark {
     text-align: center;
     width: 90%;
     margin-left: 3.7%;
+}
+
+.showAddNote{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #c8e6f0;
+
 }
 
 .note:hover {

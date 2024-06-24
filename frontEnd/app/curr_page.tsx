@@ -8,7 +8,7 @@ import { ThemeContext } from './Theme';
 
 interface PageProps {
   currentPage: number;
-  notesNumber: number;
+  numberOfNotes: number;
   handleDelete: () => void;
   addNoteCount: () => void;
 }
@@ -28,8 +28,9 @@ interface Note {
     content: string;
 }
 
-const Curr_page: React.FC<PageProps>  = ({currentPage, notesNumber, handleDelete, addNoteCount}) => {
+const Curr_page: React.FC<PageProps>  = ({currentPage,  numberOfNotes, handleDelete, addNoteCount}) => {
     const [notes, setNotes] = useState<Note[]>([]);
+    const [showAddNote, setShowAddNote] = useState(false)
     const theme = useContext(ThemeContext); 
 
     useEffect(() => {
@@ -40,27 +41,25 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, notesNumber, handleDelete
         fetchNotes(); // Refresh notes after editing or deleting
     };
 
-    
-        const fetchNotes = async () => {
-            const start_index = (currentPage-1)*NOTES_PER_PAGE
-            const end_index = (currentPage)*NOTES_PER_PAGE
-            try {
-                const response = await axios.get(`${API_URL}?_start=${start_index}&_end=${end_index}}`);
-                setNotes(response.data);
-            } catch (error) {
-                console.error('Error fetching notes:', error);
-            }
-        };
-
-        const handleAddNote = () => {
-            addNoteCount();
-            fetchNotes();
+    const fetchNotes = async () => {
+        const start_index = (currentPage-1)*NOTES_PER_PAGE
+        try {
+            const response = await axios.get(`${API_URL}?_start=${start_index}`);
+            setNotes(response.data);
+        } catch (error) {
+            console.error('Error fetching notes:', error);
         }
+    };
 
-        const handleDeleteNote = () => {
-            handleDelete();
-            fetchNotes();
-        }
+    const handleAddNote = () => {
+        addNoteCount();
+        fetchNotes();
+    }
+
+    const handleDeleteNote = () => {
+        handleDelete();
+        fetchNotes();
+    }
 
     return (
         <div className={`allNotes ${theme}`}>
@@ -70,7 +69,10 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, notesNumber, handleDelete
                      <Note key={note.id} note={note} onUpdate={handleNoteUpdate} onDelete = {handleDeleteNote} />
                 ))}
             </div>
-            <AddNote onAdd = {handleAddNote}/>
+            <div className={`showAddNote ${theme}`}>
+            <button  onClick={()=>setShowAddNote(!showAddNote)}> {showAddNote ? "close"  : "Add Note"} </button>
+            {showAddNote ? <AddNote onAdd = {handleAddNote}/> : null}
+            </div>
         </div>
     );
 };

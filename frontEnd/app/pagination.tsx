@@ -1,6 +1,7 @@
 "use client";
 
-import React from 'react';
+import React ,{ useContext } from 'react';
+import { ThemeContext } from './Theme';
 
 interface PaginationProps {
     currentPage: number;
@@ -9,6 +10,7 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+    const theme = useContext(ThemeContext); 
     const getPageNumbers = () => {
         if (totalPages <= 5) {
             return Array.from({ length: totalPages }, (_, index) => index + 1);
@@ -45,7 +47,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
     const pageNumbers = getPageNumbers();
 
     return (
-        <div className="pagination">
+        <div className={`pagination ${theme}` }>
             <button name="first" onClick={() => onPageChange(1)} disabled={currentPage === 1}>First  </button>
             <button name="previous" onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}>Previous  </button>
             {pageNumbers.map(page => (

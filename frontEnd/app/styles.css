@@ -16,7 +16,7 @@ body.light, .note.light {
     color: black;
 }
 
-body.dark, .allNotes.dark, .note.dark {
+body.dark, .allNotes.dark, .note.dark, .pagination.dark, .mainPage.dark {
     background-color: black;
     color: white;
 }

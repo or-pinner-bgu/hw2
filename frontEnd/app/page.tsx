@@ -51,7 +51,7 @@ const App = () => {
 
     return (
         <ThemeContext.Provider value={theme} >
-            <div>
+            <div className={`mainPage ${theme}`}>
                 <label>
                     <input
                         type = "checkbox"

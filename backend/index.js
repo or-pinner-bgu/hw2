@@ -60,7 +60,8 @@ app.get('/notes', async (req, res) => {
 
 app.get('/notes/:id', async (req, res) => {
     try {
-        const note = await Note.findOne({ id: req.params.id });
+        const index = parseInt(req.params.index, 10);
+        const note = await Note.find().skip(index).limit(1);
         if (!note) {
             return res.status(404).json({ error: 'Note not found' });
         }
@@ -79,8 +80,9 @@ app.post('/notes', async (req, res) => {
     });
     
     note.save().then(() => {
+        res.status(201);
         res.json(note);
-    })
+    }).catch((error) => res.status(500).json({ error: 'Error fetching note' }))
 });
 
 app.put('/notes/:id', async (req, res) => {
@@ -92,7 +94,13 @@ app.put('/notes/:id', async (req, res) => {
     };
 
     try {
-        const updatedNote = await Note.findOneAndUpdate({ id: req.body.id }, noteData, { new: true });
+        const index = parseInt(req.params.id, 10);
+        const notes = await Note.find().skip(index).limit(1);
+        if(notes.length === 0){
+            return res.status(404).json({ message: 'Note not found' });
+        }
+        const note = notes[0];
+        const updatedNote = await Note.findOneAndUpdate({ id: note.id }, noteData, { new: true });
         if (!updatedNote) {
             return res.status(404).json({ message: 'Note not found' });
         }
@@ -104,7 +112,13 @@ app.put('/notes/:id', async (req, res) => {
 
 app.delete('/notes/:id', async (req, res) => {
     try {
-        const result = await Note.deleteMany({ id: req.params.id });
+        const index = parseInt(req.params.id, 10);
+        const notes = await Note.find().skip(index).limit(1);
+        if(notes.length === 0){
+            return res.status(404).json({ message: 'Note not found' });
+        }
+        const note = notes[0];
+        const result = await Note.deleteMany({ id: note.id });
         if (result.deletedCount === 0) {
             return res.status(404).json({ message: 'Note not found' });
         }

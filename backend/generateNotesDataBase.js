@@ -38,6 +38,15 @@ const postsGenerator = (postsNum) => {
 const postsNum = 87; 
 const data = postsGenerator(postsNum);
 
+async function clearNotes() {
+    try {
+        await Note.deleteMany({});
+        console.log("All notes deleted");
+    } catch (error) {
+        console.error('Error deleting notes:', error);
+    }
+}
+
 async function saveNotes() {
     for (let note of data) {
         try {
@@ -60,4 +69,7 @@ async function saveNotes() {
     mongoose.connection.close();
 }
 
-saveNotes();
+
+await clearNotes(); 
+await saveNotes(); 
+

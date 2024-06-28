@@ -8,7 +8,6 @@ import { ThemeContext } from './Theme';
 
 interface PageProps {
   currentPage: number;
-  numberOfNotes: number;
   handleDelete: () => void;
   addNoteCount: () => void;
 }
@@ -28,7 +27,7 @@ interface Note {
     content: string;
 }
 
-const Curr_page: React.FC<PageProps>  = ({currentPage,  numberOfNotes, handleDelete, addNoteCount}) => {
+const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCount}) => {
     const [notes, setNotes] = useState<Note[]>([]);
     const [showAddNote, setShowAddNote] = useState(false)
     const theme = useContext(ThemeContext); 
@@ -54,6 +53,11 @@ const Curr_page: React.FC<PageProps>  = ({currentPage,  numberOfNotes, handleDel
     const handleAddNote = () => {
         addNoteCount();
         fetchNotes();
+        setShowAddNote(false)
+    }
+
+    const handleCancelNote = () => {
+        setShowAddNote(false)
     }
 
     const handleDeleteNote = () => {
@@ -65,13 +69,18 @@ const Curr_page: React.FC<PageProps>  = ({currentPage,  numberOfNotes, handleDel
         <div className={`allNotes ${theme}`}>
             <h1>Notes</h1>
             <div>
-                {notes.map(note => (
-                     <Note key={note.id} note={note} onUpdate={handleNoteUpdate} onDelete = {handleDeleteNote} />
+                {notes.map((note, index) => (
+                     <Note 
+                        key={note.id} 
+                        note={note} 
+                        onUpdate={handleNoteUpdate} 
+                        onDelete = {handleDeleteNote}
+                        dbIndex = {index+(currentPage-1)*10}
+                      />
                 ))}
             </div>
             <div className={`showAddNote ${theme}`}>
-            <button  onClick={()=>setShowAddNote(!showAddNote)}> {showAddNote ? "close"  : "Add Note"} </button>
-            {showAddNote ? <AddNote onAdd = {handleAddNote}/> : null}
+            {showAddNote ? <AddNote onAdd = {handleAddNote} onCancel = {handleCancelNote}/>  :  <button  onClick={()=>setShowAddNote(!showAddNote)} name="add_new_note">Add Note</button>}
             </div>
         </div>
     );

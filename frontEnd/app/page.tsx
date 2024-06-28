@@ -25,8 +25,6 @@ const App = () => {
             console.log('Total count:', totalCount);
             setNumOfPages(Math.ceil(parseInt(totalCount)/NOTES_PER_PAGE));
             totalNotesCount.current = totalCount;
-            const lastNote = await axios.get(`${API_URL_notesCount}`);
-
         } catch (error) {
             console.error('Error fetching total count:', error);
         }
@@ -51,11 +49,11 @@ const App = () => {
         setCurrentPage(page);
     };
 
-    return (
-        <ThemeContext.Provider value={theme} >
-            <div>
-                <label>
+    const checkboxTheme = () => {
+        return (
+            <label>
                     <input
+                        name = "change_theme"
                         type = "checkbox"
                         checked = {isLight}
                         onChange = { e => 
@@ -63,9 +61,17 @@ const App = () => {
                         }
                     /> change theme
                 </label>
+        )
+    }
+
+    return (
+        <ThemeContext.Provider value={theme} >
+            <div>
+                <div>
+                    {checkboxTheme()}
+                </div>
                 <Curr_page 
                     currentPage= {currentPage}
-                    numberOfNotes = {totalNotesCount.current}
                     handleDelete = {handleRemoveNote} 
                     addNoteCount = {addNoteCount}  
                 />

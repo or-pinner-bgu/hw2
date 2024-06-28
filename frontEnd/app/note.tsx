@@ -16,9 +16,10 @@ interface NoteProps {
     };
     onUpdate: () => void; 
     onDelete: () => void;
+    dbIndex: number;
 }
 
-const Note: React.FC<NoteProps> = ({ note, onUpdate, onDelete}) => {
+const Note: React.FC<NoteProps> = ({ note, onUpdate, onDelete, dbIndex}) => {
     const [editing, setEditing] = useState(false);
     const [editedContent, setEditedContent] = useState(note.content);
     const theme  = useContext(ThemeContext);
@@ -29,7 +30,7 @@ const Note: React.FC<NoteProps> = ({ note, onUpdate, onDelete}) => {
 
     const handleSave = async () => {
         try {
-            await axios.put(`http://localhost:3001/notes/${note.id}`, { ...note, content: editedContent });
+            await axios.put(`http://localhost:3001/notes/${dbIndex}`, { ...note, content: editedContent });
             setEditing(false);
             onUpdate(); // Refresh notes after saving
         } catch (error) {
@@ -43,10 +44,10 @@ const Note: React.FC<NoteProps> = ({ note, onUpdate, onDelete}) => {
     };
 
     const handleDelete = async () => {
+        console.log(dbIndex);
         try {
-            await axios.delete(`http://localhost:3001/notes/${note.id}`);
+            await axios.delete(`http://localhost:3001/notes/${dbIndex}`);
             onDelete(); 
-            // onUpdate(); // Refresh notes after deletion
         } catch (error) {
             console.error('Error deleting note:', error);
         }
@@ -57,7 +58,7 @@ const Note: React.FC<NoteProps> = ({ note, onUpdate, onDelete}) => {
     };
 
     return (
-        <div className={`note ${theme}`} id={`${note.id}`}>
+        <div className={`note ${theme}`} id={`${dbIndex}`}>
             <h2>{note.title}</h2>
             <small>Posted by: {note.author.name}</small>
             <small>Email: {note.author.email}</small>
@@ -65,20 +66,21 @@ const Note: React.FC<NoteProps> = ({ note, onUpdate, onDelete}) => {
             {editing ? (
                 <div>
                     <textarea
+                        name={`text_input-${dbIndex}`}
                         value={editedContent}
                         onChange={handleChange}
                         rows={5}
                         cols={50}
                     />
                     <br />
-                    <button onClick={handleSave}>Save</button>
-                    <button onClick={handleCancel}>Cancel</button>
+                    <button onClick={handleSave} name={`text_input_save-${dbIndex}`}>Save</button>
+                    <button onClick={handleCancel} name={`text_input_cancel-${dbIndex}`}>Cancel</button>
                 </div>
             ) : (
                 <div>
                     <p>{note.content}</p>
-                    <button onClick={handleEdit}>Edit</button>
-                    <button onClick={handleDelete}>Delete</button>
+                    <button onClick={handleEdit} name={`edit-${dbIndex}`}>Edit</button>
+                    <button onClick={handleDelete} name={`delete-${dbIndex}`}>Delete</button>
                 </div>
             )}
         </div>

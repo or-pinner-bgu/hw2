@@ -56,7 +56,6 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
                     name={`page-${page}`}
                     onClick={() => onPageChange(page)}
                     disabled={page === currentPage}
-                   // style={{ fontWeight: page === currentPage ? 'bold' : 'normal' }}
                 >
                     {page}
                 </button>

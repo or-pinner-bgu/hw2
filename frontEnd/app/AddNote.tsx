@@ -24,7 +24,7 @@ const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel}) => {
     const [email, setEmail] = useState('');
     const [content, setContent] = useState('');
 
-    const handleAuthorNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
     };
 
@@ -36,7 +36,7 @@ const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel}) => {
         setContent(e.target.value);
     };
 
-    const handleAuthorEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
     };
 
@@ -76,20 +76,20 @@ const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel}) => {
                     />
                 </div>
                 <div>
-                    <label>Author Name:</label>
+                    <label>Name:</label>
                     <input
                         type="text"
                         value={name}
-                        onChange={handleAuthorNameChange}
+                        onChange={handleNameChange}
                         required
                     />
                 </div>
                 <div>
-                    <label>Author Email:</label>
+                    <label>Email:</label>
                     <input
                         type="email"
                         value={email}
-                        onChange={handleAuthorEmailChange}
+                        onChange={handleEmailChange}
                         required
                     />
                 </div>
@@ -103,7 +103,6 @@ const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel}) => {
                 </div>
                 <button type="submit" name="text_input_save_new_note">save</button>
                 <button name="text_input_cancel_new_note" onClick={onCancel}>cancel</button>
-
             </form>
         </div>
     );
